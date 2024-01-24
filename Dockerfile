@@ -1,4 +1,4 @@
-FROM python:3.11-slim-buster
+FROM python:3.11.6
 
 WORKDIR /usr/src/app
 
@@ -8,16 +8,15 @@ RUN apt-get update && apt-get install -y \
     cmake \
     && rm -rf /var/lib/apt/lists/*
 
-RUN git clone https://github.com/kdayski/privateGPT
-
 WORKDIR /usr/src/app/privateGPT
+
+COPY . .
 
 RUN pip install poetry
 
 RUN poetry config virtualenvs.create false \
     && poetry install --with ui,local
-
-COPY ./scripts/setup ./scripts/setup
+RUN poetry install --extras chroma
 
 RUN ./scripts/setup
 
